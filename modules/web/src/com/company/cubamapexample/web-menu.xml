@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <item id="MapScreen"
+          insertBefore="administration"
+          openType="NEW_TAB"/>
+    <menu id="application"
+          insertBefore="administration">
+        <item id="cubamapexample$SalesPerson.browse"/>
+        <item id="cubamapexample$SalesTerritory.browse"/>
+        <item id="cubamapexample$SalesOrder.browse"/>
+    </menu>
+</menu-config>

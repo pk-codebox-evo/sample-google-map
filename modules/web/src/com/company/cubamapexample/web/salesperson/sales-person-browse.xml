@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.company.cubamapexample.web.salesperson.SalesPersonBrowse"
+        focusComponent="salesPersonsTable"
+        lookupComponent="salesPersonsTable"
+        messagesPack="com.company.cubamapexample.web.salesperson">
+    <dsContext>
+        <collectionDatasource id="salesPersonsDs"
+                              class="com.company.cubamapexample.entity.SalesPerson"
+                              view="salesPerson-browser-view">
+            <query>
+                <![CDATA[select e from cubamapexample$SalesPerson e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="salesPersonsTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="salesPersonsTable"
+                datasource="salesPersonsDs">
+            <properties include=".*"/>
+        </filter>
+        <table id="salesPersonsTable"
+               width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="name"/>
+                <column id="phone"/>
+                <column id="territory"/>
+            </columns>
+            <rows datasource="salesPersonsDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="salesPersonsTable.create"/>
+                <button id="editBtn"
+                        action="salesPersonsTable.edit"/>
+                <button id="removeBtn"
+                        action="salesPersonsTable.remove"/>
+            </buttonsPanel>
+        </table>
+    </layout>
+</window>

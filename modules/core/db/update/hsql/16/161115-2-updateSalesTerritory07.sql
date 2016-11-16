@@ -1,0 +1,1 @@
+alter table CUBAMAPEXAMPLE_SALES_TERRITORY drop column POLYGON_GEOMETRY cascade ;

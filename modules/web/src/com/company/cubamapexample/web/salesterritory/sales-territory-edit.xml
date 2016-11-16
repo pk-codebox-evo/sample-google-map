@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd" xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
+        caption="msg://editCaption"
+        class="com.company.cubamapexample.web.salesterritory.SalesTerritoryEdit"
+        datasource="salesTerritoryDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.company.cubamapexample.web.salesterritory">
+    <dsContext>
+        <datasource id="salesTerritoryDs"
+                    class="com.company.cubamapexample.entity.SalesTerritory"
+                    view="salesTerritory-view"/>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="windowActions"
+            spacing="true">
+        <hbox spacing="true">
+            <fieldGroup id="fieldGroup"
+                        datasource="salesTerritoryDs">
+                <column width="250px">
+                    <field id="name"/>
+                </column>
+            </fieldGroup>
+            <chart:mapViewer id="map" width="500px" height="500px"/>
+        </hbox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

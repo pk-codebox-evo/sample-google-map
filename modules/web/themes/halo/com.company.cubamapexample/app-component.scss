@@ -1,0 +1,5 @@
+@import "halo-ext";
+
+@mixin com_company_cubamapexample {
+  @include com_company_cubamapexample-halo-ext;
+}

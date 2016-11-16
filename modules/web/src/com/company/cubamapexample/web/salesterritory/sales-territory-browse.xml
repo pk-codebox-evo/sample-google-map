@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://browseCaption"
+        class="com.company.cubamapexample.web.salesterritory.SalesTerritoryBrowse"
+        focusComponent="salesTerritoriesTable"
+        lookupComponent="salesTerritoriesTable"
+        messagesPack="com.company.cubamapexample.web.salesterritory">
+    <dsContext>
+        <collectionDatasource id="salesTerritoriesDs"
+                              class="com.company.cubamapexample.entity.SalesTerritory"
+                              view="salesTerritory-view">
+            <query>
+                <![CDATA[select e from cubamapexample$SalesTerritory e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="salesTerritoriesTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="salesTerritoriesTable"
+                datasource="salesTerritoriesDs">
+            <properties include=".*"/>
+        </filter>
+        <table id="salesTerritoriesTable"
+               width="100%">
+            <actions>
+                <action id="create"/>
+                <action id="edit"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="name"/>
+            </columns>
+            <rows datasource="salesTerritoriesDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn"
+                        action="salesTerritoriesTable.create"/>
+                <button id="editBtn"
+                        action="salesTerritoriesTable.edit"/>
+                <button id="removeBtn"
+                        action="salesTerritoriesTable.remove"/>
+            </buttonsPanel>
+        </table>
+    </layout>
+</window>

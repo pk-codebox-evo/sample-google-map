@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
+    <view class="com.company.cubamapexample.entity.SalesPerson"
+          extends="_local"
+          name="salesPerson-browser-view">
+        <property name="territory"
+                  view="_local">
+        </property>
+        <property name="photo"
+                  view="_minimal"/>
+    </view>
+    <view class="com.company.cubamapexample.entity.SalesPerson"
+          extends="_local"
+          name="salesPerson-full">
+        <property name="territory"
+                  view="_minimal">
+            <property name="polygonGeometry"/>
+        </property>
+        <property name="salesOrder"
+                  view="_minimal">
+            <property name="amount"/>
+            <property name="date"/>
+        </property>
+        <property name="photo"
+                  view="_minimal"/>
+    </view>
+    <view class="com.company.cubamapexample.entity.SalesTerritory"
+          extends="_local"
+          name="salesTerritory-view">
+    </view>
+    <view class="com.company.cubamapexample.entity.SalesOrder"
+          extends="_local"
+          name="salesOrder-browser-view">
+        <property name="salesPerson"
+                  view="_minimal"/>
+    </view>
+</views>

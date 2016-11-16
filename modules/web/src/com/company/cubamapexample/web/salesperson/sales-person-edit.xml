@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://editCaption"
+        class="com.company.cubamapexample.web.salesperson.SalesPersonEdit"
+        datasource="salesPersonDs"
+        focusComponent="fieldGroup"
+        messagesPack="com.company.cubamapexample.web.salesperson"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd">
+    <dsContext>
+        <datasource id="salesPersonDs"
+                    class="com.company.cubamapexample.entity.SalesPerson"
+                    view="salesPerson-browser-view"/>
+    </dsContext>
+    <layout expand="windowActions"
+            spacing="true">
+        <hbox spacing="true">
+            <vbox spacing="true">
+                <fieldGroup id="fieldGroup"
+                            datasource="salesPersonDs">
+                    <column width="250px">
+                        <field id="name"/>
+                        <field id="phone"/>
+                        <field id="latitude" caption="msg://latitude" editable="false"/>
+                        <field id="longitude" caption="msg://longitude" editable="false"/>
+                        <field id="territory"/>
+                        <field id="photo"/>
+                    </column>
+                </fieldGroup>
+                <embedded id="personPhoto" width="115px" height="115px" align="MIDDLE_CENTER"/>
+                <colorPicker id="colorPicker" caption="msg://polygonColor"/>
+
+            </vbox>
+
+            <chart:mapViewer id="map"
+                             height="500px"
+                             width="500px"/>
+
+
+        </hbox>
+        <frame id="windowActions"
+               screen="editWindowActions"/>
+    </layout>
+</window>

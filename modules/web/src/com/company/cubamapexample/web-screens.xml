@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
+    <include file="com/company/cubamapexample/screens.xml"/>
+    <screen id="cubamapexample$SalesPerson.browse"
+            template="com/company/cubamapexample/web/salesperson/sales-person-browse.xml"/>
+    <screen id="cubamapexample$SalesPerson.edit"
+            template="com/company/cubamapexample/web/salesperson/sales-person-edit.xml"/>
+    <screen id="cubamapexample$SalesTerritory.browse"
+            template="com/company/cubamapexample/web/salesterritory/sales-territory-browse.xml"/>
+    <screen id="cubamapexample$SalesTerritory.edit"
+            template="com/company/cubamapexample/web/salesterritory/sales-territory-edit.xml"/>
+    <screen id="cubamapexample$SalesOrder.browse"
+            template="com/company/cubamapexample/web/salesorder/sales-order-browse.xml"/>
+    <screen id="cubamapexample$SalesOrder.edit"
+            template="com/company/cubamapexample/web/salesorder/sales-order-edit.xml"/>
+    <screen id="MapScreen"
+            template="com/company/cubamapexample/web/screens/mapscreen/MapScreen.xml"/>
+    <screen id="salesorderchartwindow"
+            template="com/company/cubamapexample/web/screens/salesrorderchartwindow/sales-order-chart-window.xml"/>
+</screen-config>

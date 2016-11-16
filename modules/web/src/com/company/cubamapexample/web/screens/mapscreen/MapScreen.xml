@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://caption"
+        class="com.company.cubamapexample.web.screens.mapscreen.MapScreen"
+        messagesPack="com.company.cubamapexample.web.screens.mapscreen"
+        xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd">
+    <dsContext>
+        <collectionDatasource id="salesPersonsDs"
+                              class="com.company.cubamapexample.entity.SalesPerson"
+                              view="salesPerson-full">
+            <query>
+                <![CDATA[select e from cubamapexample$SalesPerson e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <layout>
+        <chart:mapViewer id="map"
+                         height="100%"
+                         width="100%"/>
+    </layout>
+</window>
