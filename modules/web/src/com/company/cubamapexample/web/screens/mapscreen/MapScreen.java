@@ -1,10 +1,12 @@
 package com.company.cubamapexample.web.screens.mapscreen;
 
 import com.company.cubamapexample.entity.SalesPerson;
-import com.company.cubamapexample.web.PointLayer;
 import com.company.cubamapexample.web.style.MapViewerHelper;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.haulmont.bali.util.ParamsMap;
 import com.haulmont.charts.gui.components.map.MapViewer;
+import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Marker;
 import com.haulmont.charts.gui.map.model.Polygon;
 import com.haulmont.charts.gui.map.model.base.MarkerImage;
@@ -15,6 +17,7 @@ import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,14 +33,46 @@ public class MapScreen extends AbstractWindow {
     @Inject
     protected MapViewer map;
 
-    protected PointLayer<SalesPerson> pointLayer;
     protected Map<Polygon, SalesPerson> polygonSalesPersonMap = new HashMap<>();
+
+    protected BiMap<Marker, SalesPerson> salesPersonMarkers = HashBiMap.create();
 
     @Override
     public void ready() {
-        addPointLayer();
+        addSalesPersonMarkersOnMap();
+        initMarkerClickListener();
         initPolygonClickListener();
         super.ready();
+    }
+
+    private void addSalesPersonMarkersOnMap() {
+        salesPersonsDs.refresh();
+        Collection<SalesPerson> salesPersonList = salesPersonsDs.getItems();
+        for (SalesPerson salesPerson : salesPersonList) {
+            Marker personMarker = createMarkerForSalesPerson(salesPerson);
+            map.addMarker(personMarker);
+            salesPersonMarkers.put(personMarker, salesPerson);
+        }
+    }
+
+    private Marker createMarkerForSalesPerson(SalesPerson salesPerson) {
+        GeoPoint geoPoint = map.createGeoPoint(salesPerson.getLatitude(), salesPerson.getLongitude());
+        Marker marker = map.createMarker("", geoPoint, false);
+        marker.setIcon(getMarkerImageForPerson(salesPerson));
+        return marker;
+    }
+
+    private void initMarkerClickListener() {
+        map.addMarkerClickListener(event -> {
+            SalesPerson salesPerson = salesPersonMarkers.get(event.getMarker());
+            if (salesPerson.getTerritory() != null) {
+                if (polygonSalesPersonMap.containsValue(salesPerson)) {
+                    removePolygon(salesPerson);
+                } else {
+                    drawPolygon(salesPerson);
+                }
+            }
+        });
     }
 
     private void initPolygonClickListener() {
@@ -57,28 +92,12 @@ public class MapScreen extends AbstractWindow {
         return null;
     }
 
-    private void addPointLayer() {
-        pointLayer = new PointLayer<SalesPerson>(map, salesPersonsDs) {
-            @Override
-            protected void onMarkerClick(SalesPerson entity, Marker marker) {
-                if (entity.getTerritory() != null) {
-                    if (polygonSalesPersonMap.containsValue(entity)) {
-                        removePolygon(entity);
-                    } else {
-                        drawPolygon(entity);
-                    }
-                }
-                super.onMarkerClick(entity, marker);
-            }
-        };
-        pointLayer.setMarkerIconImageProvider(salesPerson -> {
-            GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            MarkerImage markerImage = map.createMarkerImage();
-            markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png");
-            markerImage.setScaledSize(map.createSize(48, 48));
-            return markerImage;
-        });
-        pointLayer.refresh();
+    private MarkerImage getMarkerImageForPerson(SalesPerson salesPerson) {
+        GlobalConfig config = configuration.getConfig(GlobalConfig.class);
+        MarkerImage markerImage = map.createMarkerImage();
+        markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png");
+        markerImage.setScaledSize(map.createSize(48, 48));
+        return markerImage;
     }
 
     private void removePolygon(SalesPerson entity) {
