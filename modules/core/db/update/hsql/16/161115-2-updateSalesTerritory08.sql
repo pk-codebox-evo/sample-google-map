@@ -1,1 +1,0 @@
-alter table CUBAMAPEXAMPLE_SALES_TERRITORY add column POLYGON_GEOMETRY longvarchar ;
