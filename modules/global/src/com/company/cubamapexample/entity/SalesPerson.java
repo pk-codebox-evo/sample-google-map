@@ -1,7 +1,7 @@
 package com.company.cubamapexample.entity;
 
-import com.company.cubamapexample.GeometryUtils.HasCoordinates;
-import com.company.cubamapexample.GeometryUtils.datatypes.GeoCoordinateDatatype;
+import com.company.cubamapexample.geometryutils.HasCoordinates;
+import com.company.cubamapexample.geometryutils.datatypes.GeoCoordinateDatatype;
 import com.haulmont.chile.core.annotations.MetaProperty;
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.FileDescriptor;
@@ -56,7 +56,6 @@ public class SalesPerson extends StandardEntity implements HasCoordinates {
         return polygonColor;
     }
 
-
     public void setPhoto(FileDescriptor photo) {
         this.photo = photo;
     }
@@ -64,7 +63,6 @@ public class SalesPerson extends StandardEntity implements HasCoordinates {
     public FileDescriptor getPhoto() {
         return photo;
     }
-
 
     public Set<SalesOrder> getSalesOrder() {
         return salesOrder;
@@ -74,7 +72,6 @@ public class SalesPerson extends StandardEntity implements HasCoordinates {
         this.salesOrder = salesOrder;
     }
 
-
     public void setTerritory(SalesTerritory territory) {
         this.territory = territory;
     }
@@ -82,7 +79,6 @@ public class SalesPerson extends StandardEntity implements HasCoordinates {
     public SalesTerritory getTerritory() {
         return territory;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -99,7 +95,6 @@ public class SalesPerson extends StandardEntity implements HasCoordinates {
     public String getPhone() {
         return phone;
     }
-
 
     @Override
     public Double getLatitude() {

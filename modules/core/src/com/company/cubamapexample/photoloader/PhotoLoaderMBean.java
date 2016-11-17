@@ -2,7 +2,7 @@
  * TODO Copyright
  */
 
-package com.company.cubamapexample.PhotoLoader;
+package com.company.cubamapexample.photoloader;
 
 import java.util.UUID;
 

@@ -4,7 +4,7 @@
 
 package com.company.cubamapexample.service;
 
-import com.company.cubamapexample.PhotoLoader.PhotoLoaderMBean;
+import com.company.cubamapexample.photoloader.PhotoLoaderMBean;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

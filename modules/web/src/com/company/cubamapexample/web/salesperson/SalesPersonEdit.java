@@ -8,6 +8,7 @@ import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Marker;
 import com.haulmont.charts.gui.map.model.Polygon;
 import com.haulmont.cuba.core.app.FileStorageService;
+import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.core.global.FileStorageException;
 import com.haulmont.cuba.core.global.GlobalConfig;
@@ -17,28 +18,23 @@ import com.vaadin.shared.ui.colorpicker.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Map;
 
 public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
 
-    protected static final String DEFAULT_POLYGON_COLOR = "#0000ff";
+    protected static final Color DEFAULT_POLYGON_COLOR = Color.BLUE;
 
-    protected static final int IMG_HEIGHT = 115;
-    protected static final int IMG_WIDTH = 115;
     private static final Logger log = LoggerFactory.getLogger(SalesPersonEdit.class);
+
     @Inject
     private Configuration configuration;
     @Inject
     private FileStorageService fileStorageService;
     @Inject
     protected MapViewer map;
-
 
     @Inject
     protected ColorPicker colorPicker;
@@ -57,12 +53,10 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
     private TextField longitudeTextField;
 
     protected Marker salesPersonLocationMarker;
-
     protected Polygon territoryPolygon;
 
     @Override
     public void init(Map<String, Object> params) {
-        addMapClickListener();
         addMarkerDragListener();
         addTerritoryFieldChangeListener();
         super.init(params);
@@ -95,7 +89,6 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
             colorPicker.setValue(hex2Rgb(getItem().getPolygonColor()));
         }
     }
-
 
     private void addTerritoryFieldChangeListener() {
         territoryField.addValueChangeListener(e -> {
@@ -136,33 +129,18 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
 
     private void displayPhoto() {
         byte[] bytes = null;
-        if (getItem().getPhoto() != null) {
+        FileDescriptor photo = getItem().getPhoto();
+        if (photo != null) {
             try {
-                bytes = fileStorageService.loadFile(getItem().getPhoto());
+                bytes = fileStorageService.loadFile(photo);
             } catch (FileStorageException e) {
                 log.error("Unable to load image file", e);
                 showNotification("Unable to load image file", NotificationType.HUMANIZED);
             }
         }
         if (bytes != null) {
-            personPhoto.setSource(getItem().getPhoto().getName(), new ByteArrayInputStream(bytes));
+            personPhoto.setSource(photo.getName(), new ByteArrayInputStream(bytes));
             personPhoto.setType(Embedded.Type.IMAGE);
-            BufferedImage image;
-            try {
-                image = ImageIO.read(new ByteArrayInputStream(bytes));
-                int width = image.getWidth();
-                int height = image.getHeight();
-
-                if (((double) height / (double) width) > ((double) IMG_HEIGHT / (double) IMG_WIDTH)) {
-                    personPhoto.setHeight(String.valueOf(IMG_HEIGHT));
-                    personPhoto.setWidth(String.valueOf(width * IMG_HEIGHT / height));
-                } else {
-                    personPhoto.setWidth(String.valueOf(IMG_WIDTH));
-                    personPhoto.setHeight(String.valueOf(height * IMG_WIDTH / width));
-                }
-            } catch (IOException e) {
-                log.error("Unable to resize image", e);
-            }
             personPhoto.setVisible(false);
             personPhoto.setVisible(true);
         } else {
@@ -170,14 +148,13 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
         }
     }
 
-
     private void setMapCenter() {
-        if (getItem().getLatitude() != null && getItem().getLongitude() != null) {
-            GeoPoint center = map.createGeoPoint(getItem().getLatitude(), getItem().getLongitude());
+        SalesPerson salesPerson = getItem();
+        if (salesPerson.getLatitude() != null && salesPerson.getLongitude() != null) {
+            GeoPoint center = map.createGeoPoint(salesPerson.getLatitude(), salesPerson.getLongitude());
             map.setCenter(center);
         }
     }
-
 
     private void addColorPickerChangeListener() {
         colorPicker.addValueChangeListener(e -> {
@@ -196,16 +173,15 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
     }
 
     private void setPersonPhoto() {
-        if (getItem().getPhoto() != null) {
+        SalesPerson salesPerson = getItem();
+        if (salesPerson.getPhoto() != null) {
             GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            String urlString = config.getWebAppUrl();
-            personPhoto.setSource(urlString + "/dispatch/getPhoto/" + getItem().getId() + ".png");
+            personPhoto.setSource(config.getDispatcherBaseUrl() + "/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png");
             personPhoto.setType(Embedded.Type.IMAGE);
         } else {
             personPhoto.setVisible(false);
         }
     }
-
 
     private void addMarkerDragListener() {
         map.addMarkerDragListener(event -> {
@@ -214,11 +190,9 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
         });
     }
 
-
     private void setDefaultColorPickerValue(SalesPerson item) {
-        Color color = hex2Rgb(DEFAULT_POLYGON_COLOR);
-        colorPicker.setValue(color);
-        item.setPolygonColor(DEFAULT_POLYGON_COLOR);
+        colorPicker.setValue(DEFAULT_POLYGON_COLOR);
+        item.setPolygonColor(DEFAULT_POLYGON_COLOR.getCSS());
     }
 
     private Color hex2Rgb(String colorStr) {
@@ -237,18 +211,12 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
         if (getItem().getLatitude() != null && getItem().getLongitude() != null) {
             double lat = getItem().getLatitude();
             double lon = getItem().getLongitude();
-            setMarkerPosition(lat, lon);
+            createMarkerByCoordinates(lat, lon);
             setLatLonTextFieldValues(lat, lon);
         }
     }
 
-    private void addMapClickListener() {
-        map.addMapClickListener(event -> {
-            setMarkerPosition(event.getPosition().getLatitude(), event.getPosition().getLongitude());
-        });
-    }
-
-    private void setMarkerPosition(double lat, double lon) {
+    private void createMarkerByCoordinates(double lat, double lon) {
         if (salesPersonLocationMarker == null) {
             salesPersonLocationMarker = map.createMarker();
             salesPersonLocationMarker.setDraggable(true);
@@ -258,5 +226,4 @@ public class SalesPersonEdit extends AbstractEditor<SalesPerson> {
             setLatLonTextFieldValues(lat, lon);
         }
     }
-
 }

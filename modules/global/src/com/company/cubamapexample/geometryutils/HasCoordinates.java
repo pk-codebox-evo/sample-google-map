@@ -1,8 +1,4 @@
-/*
- * TODO Copyright
- */
-
-package com.company.cubamapexample.GeometryUtils;
+package com.company.cubamapexample.geometryutils;
 
 public interface HasCoordinates {
     Double getLatitude();

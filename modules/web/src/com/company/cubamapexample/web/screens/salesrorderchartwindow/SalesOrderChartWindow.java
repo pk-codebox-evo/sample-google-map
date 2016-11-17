@@ -15,6 +15,7 @@ public class SalesOrderChartWindow extends AbstractWindow {
 
     @WindowParam
     protected SalesPerson salesPerson;
+
     @Inject
     private Configuration configuration;
 
@@ -44,11 +45,9 @@ public class SalesOrderChartWindow extends AbstractWindow {
     private void initPhoto() {
         if (salesPerson != null) {
             GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            String urlString = config.getWebAppUrl();
-            String photoURL = urlString + "/dispatch/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png";
+            String photoURL = config.getDispatcherBaseUrl() + "/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png";
             personPhoto.setSource(photoURL);
             personPhoto.setType(Embedded.Type.IMAGE);
         }
     }
-
 }

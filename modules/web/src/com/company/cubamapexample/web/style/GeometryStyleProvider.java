@@ -4,7 +4,7 @@
 
 package com.company.cubamapexample.web.style;
 
-import com.company.cubamapexample.GeometryUtils.HasCoordinates;
+import com.company.cubamapexample.geometryutils.HasCoordinates;
 import com.haulmont.cuba.core.entity.Entity;
 
 import java.util.UUID;

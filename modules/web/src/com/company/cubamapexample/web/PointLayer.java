@@ -1,6 +1,6 @@
 package com.company.cubamapexample.web;
 
-import com.company.cubamapexample.GeometryUtils.HasCoordinates;
+import com.company.cubamapexample.geometryutils.HasCoordinates;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.haulmont.charts.gui.components.map.MapViewer;
@@ -10,11 +10,8 @@ import com.haulmont.charts.gui.map.model.base.MarkerImage;
 import com.haulmont.charts.gui.map.model.listeners.InfoWindowClosedListener;
 import com.haulmont.charts.gui.map.model.listeners.click.MarkerClickListener;
 import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.vividsolutions.jts.geom.Point;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +35,6 @@ public class PointLayer<T extends Entity<UUID> & HasCoordinates> extends Abstrac
     protected Predicate<T> filter = t -> true;
 
     protected MetaClass metaClass;
-    protected String pointPropertyName;
     protected CollectionDatasource.CollectionChangeListener<T, UUID> refreshLayerListener;
     protected InfoWindowClosedListener infoWindowClosedListener;
 
@@ -49,32 +45,6 @@ public class PointLayer<T extends Entity<UUID> & HasCoordinates> extends Abstrac
         metaClass = ds.getMetaClass();
         initDefaultProviders();
         initListeners(map, ds);
-    }
-
-    public PointLayer(final MapViewer map, final CollectionDatasource<T, UUID> ds, String pointPropertyName) {
-        this(map, ds);
-
-        MetaProperty pointProperty;
-        if (pointPropertyName != null && pointPropertyName.indexOf('.') != -1) {
-            MetaPropertyPath pointPropertyPath = metaClass.getPropertyPath(pointPropertyName);
-            if (pointPropertyPath == null) {
-                throw new RuntimeException("Property path is not valid: " + pointPropertyName);
-            }
-
-            pointProperty = pointPropertyPath.getMetaProperty();
-        } else {
-            pointProperty = metaClass.getProperty(pointPropertyName);
-        }
-
-        if (pointProperty == null) {
-            throw new IllegalArgumentException("Property " + pointPropertyName + " is not found in entity "
-                    + metaClass.getName());
-        } else if (!isPoint(pointProperty)) {
-            throw new IllegalArgumentException("Property " + pointPropertyName + " of entity "
-                    + metaClass.getName() + " should be of Point class");
-        }
-
-        this.pointPropertyName = pointPropertyName;
     }
 
     protected void initListeners(MapViewer map, CollectionDatasource<T, UUID> ds) {
@@ -103,56 +73,8 @@ public class PointLayer<T extends Entity<UUID> & HasCoordinates> extends Abstrac
         };
     }
 
-    private boolean isPoint(MetaProperty pointProperty) {
-        return Point.class.isAssignableFrom(pointProperty.getJavaType());
-    }
-
-    public Predicate<T> getFilter() {
-        return filter;
-    }
-
-    public void setFilter(Predicate<T> filter) {
-        this.filter = filter;
-    }
-
-    public BiFunction<T, MapViewer, InfoWindow> getInfoWindowProvider() {
-        return infoWindowProvider;
-    }
-
-    public void setInfoWindowProvider(BiFunction<T, MapViewer, InfoWindow> infoWindowProvider) {
-        this.infoWindowProvider = infoWindowProvider;
-    }
-
-    public Function<T, String> getMarkerCaptionProvider() {
-        return markerCaptionProvider;
-    }
-
-    public void setMarkerCaptionProvider(Function<T, String> markerCaptionProvider) {
-        this.markerCaptionProvider = markerCaptionProvider;
-    }
-
-    public Function<T, MarkerImage> getMarkerIconImageProvider() {
-        return markerIconImageProvider;
-    }
-
     public void setMarkerIconImageProvider(Function<T, MarkerImage> markerIconImageProvider) {
         this.markerIconImageProvider = markerIconImageProvider;
-    }
-
-    public Function<T, String> getInfoWindowContentProvider() {
-        return infoWindowContentProvider;
-    }
-
-    public void setInfoWindowContentProvider(Function<T, String> infoWindowContentProvider) {
-        this.infoWindowContentProvider = infoWindowContentProvider;
-    }
-
-    public Function<T, String> getMarkerIconUrlProvider() {
-        return markerIconUrlProvider;
-    }
-
-    public void setMarkerIconUrlProvider(Function<T, String> markerIconUrlProvider) {
-        this.markerIconUrlProvider = markerIconUrlProvider;
     }
 
     protected MarkerClickListener getEntityMarkerListener(final MapViewer map) {
@@ -173,30 +95,12 @@ public class PointLayer<T extends Entity<UUID> & HasCoordinates> extends Abstrac
         };
     }
 
-    protected void beforeMarkerClicked(Marker marker, T entity) {
-    }
-
-    protected void afterMarkerClicked(Marker marker, T entity) {
-    }
-
-    public void onEntityClick(T entity) {
-        if (entity == null) {
-            return;
-        }
-        Marker marker = entityMarkers.get(entity.getId());
-        if (marker != null) {
-            onMarkerClick(entity, marker);
-        }
-    }
-
     protected void onMarkerClick(T entity, Marker marker) {
-        beforeMarkerClicked(marker, entity);
         InfoWindow infoWindow = createInfoWindow(entity, marker);
         if (infoWindow != null) {
             markerInfoWindows.put(marker, infoWindow);
             map.openInfoWindow(infoWindow);
         }
-        afterMarkerClicked(marker, entity);
     }
 
     private InfoWindow createInfoWindow(T entity, Marker marker) {
@@ -230,7 +134,6 @@ public class PointLayer<T extends Entity<UUID> & HasCoordinates> extends Abstrac
         if (markerCaptionProvider != null) {
             marker.setCaption(markerCaptionProvider.apply(entity));
         }
-
         if (markerIconImageProvider != null) {
             marker.setIcon(markerIconImageProvider.apply(entity));
         } else if (markerIconUrlProvider != null) {

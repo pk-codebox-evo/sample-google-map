@@ -2,7 +2,7 @@
  * TODO Copyright
  */
 
-package com.company.cubamapexample.GeometryUtils.datatypes;
+package com.company.cubamapexample.geometryutils.datatypes;
 
 import com.haulmont.chile.core.datatypes.Datatypes;
 import com.haulmont.chile.core.datatypes.FormatStrings;
@@ -17,10 +17,8 @@ import java.util.Locale;
 
 public class GeoCoordinateDatatype extends DoubleDatatype {
 
-    // This field is required for Studio even if you don't use it in code
     public static final String NAME = "geocoordinate";
 
-    // The format is the same for all locales but may differ in decimal points
     public static final String FORMAT = "#0.000000";
 
     public GeoCoordinateDatatype(Element element) {

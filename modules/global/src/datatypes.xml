@@ -1,6 +1,6 @@
 <datatypes>
 
-    <datatype class="com.company.cubamapexample.GeometryUtils.datatypes.GeoCoordinateDatatype"
+    <datatype class="com.company.cubamapexample.geometryutils.datatypes.GeoCoordinateDatatype"
               format="#0.000000" decimalSeparator="." groupingSeparator=""
               javaType="java.lang.Double"/>
 
@@ -32,10 +32,4 @@
     <datatype class="com.haulmont.chile.core.datatypes.impl.UUIDDatatype"/>
 
     <datatype class="com.haulmont.chile.core.datatypes.impl.ByteArrayDatatype"/>
-
-
-    <!--<datatype class="com.company.cubamapexample.GeometryUtils.datatypes.PointDatatype" javaType="com.vividsolutions.jts.geom.Point"-->
-    <!--sqlType="String"/>-->
-    <!--<datatype class="com.company.cubamapexample.GeometryUtils.datatypes.PolygonDatatype" javaType="com.vividsolutions.jts.geom.Polygon"-->
-    <!--sqlType="String"/>-->
 </datatypes>

@@ -44,6 +44,4 @@ public class SalesOrder extends StandardEntity {
     public Date getDate() {
         return date;
     }
-
-
 }

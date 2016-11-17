@@ -20,14 +20,18 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MapScreen extends AbstractWindow {
-    @Inject
-    protected CollectionDatasource<SalesPerson, UUID> salesPersonsDs;
-    @Inject
-    protected MapViewer map;
+
     @Inject
     private Configuration configuration;
+
+    @Inject
+    protected CollectionDatasource<SalesPerson, UUID> salesPersonsDs;
+
+    @Inject
+    protected MapViewer map;
+
     protected PointLayer<SalesPerson> pointLayer;
-    protected Map<Polygon, SalesPerson> polygonSalesPersonHashMap = new HashMap<>();
+    protected Map<Polygon, SalesPerson> polygonSalesPersonMap = new HashMap<>();
 
     @Override
     public void ready() {
@@ -39,14 +43,13 @@ public class MapScreen extends AbstractWindow {
     private void initPolygonClickListener() {
         map.addPolygonClickListener(event -> {
             Polygon polygon = event.getPolygon();
-            SalesPerson salesPerson = polygonSalesPersonHashMap.get(polygon);
+            SalesPerson salesPerson = polygonSalesPersonMap.get(polygon);
             this.openWindow("salesorderchartwindow", WindowManager.OpenType.DIALOG, ParamsMap.of("salesPerson", salesPerson));
         });
-
     }
 
     private Polygon getPolygonBySalesPerson(SalesPerson salesPerson) {
-        for (Map.Entry<Polygon, SalesPerson> entry : polygonSalesPersonHashMap.entrySet()) {
+        for (Map.Entry<Polygon, SalesPerson> entry : polygonSalesPersonMap.entrySet()) {
             if (entry.getValue() == salesPerson) {
                 return entry.getKey();
             }
@@ -59,12 +62,10 @@ public class MapScreen extends AbstractWindow {
             @Override
             protected void onMarkerClick(SalesPerson entity, Marker marker) {
                 if (entity.getTerritory() != null) {
-                    if (polygonSalesPersonHashMap.containsValue(entity)) {
-                        Polygon polygon = getPolygonBySalesPerson(entity);
-                        map.removePolygonOverlay(polygon);
-                        polygonSalesPersonHashMap.remove(polygon);
+                    if (polygonSalesPersonMap.containsValue(entity)) {
+                        removePolygon(entity);
                     } else {
-                        drawPersonTerritoryPolygon(entity);
+                        drawPolygon(entity);
                     }
                 }
                 super.onMarkerClick(entity, marker);
@@ -72,20 +73,25 @@ public class MapScreen extends AbstractWindow {
         };
         pointLayer.setMarkerIconImageProvider(salesPerson -> {
             GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            String urlString = config.getWebAppUrl();
             MarkerImage markerImage = map.createMarkerImage();
-            markerImage.setUrl(urlString + "/dispatch/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png");
+            markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesPerson.getId() + '-' + salesPerson.getVersion() + ".png");
             markerImage.setScaledSize(map.createSize(48, 48));
             return markerImage;
         });
         pointLayer.refresh();
     }
 
-    private Polygon drawPersonTerritoryPolygon(SalesPerson salesPerson) {
+    private void removePolygon(SalesPerson entity) {
+        Polygon polygon = getPolygonBySalesPerson(entity);
+        map.removePolygonOverlay(polygon);
+        polygonSalesPersonMap.remove(polygon);
+    }
+
+    private Polygon drawPolygon(SalesPerson salesPerson) {
         String polygon = salesPerson.getTerritory().getPolygonGeometry();
         Polygon personTerritoryPolygon;
         personTerritoryPolygon = MapViewerHelper.WKTPolygonToMapPolygon(map, polygon);
-        polygonSalesPersonHashMap.put(personTerritoryPolygon, salesPerson);
+        polygonSalesPersonMap.put(personTerritoryPolygon, salesPerson);
         if (personTerritoryPolygon != null) {
             personTerritoryPolygon.setFillColor(salesPerson.getPolygonColor());
             personTerritoryPolygon.setFillOpacity(0.5);

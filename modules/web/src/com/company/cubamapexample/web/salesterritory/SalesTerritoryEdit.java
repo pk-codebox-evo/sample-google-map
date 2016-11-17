@@ -20,6 +20,12 @@ public class SalesTerritoryEdit extends AbstractEditor<SalesTerritory> {
     private MapViewer map;
 
     @Override
+    protected void initNewItem(SalesTerritory item) {
+        initDrawingMode();
+        super.initNewItem(item);
+    }
+
+    @Override
     public void ready() {
         addExistingPolygonOverlay();
         setMapCenter();
@@ -46,12 +52,6 @@ public class SalesTerritoryEdit extends AbstractEditor<SalesTerritory> {
         }
     }
 
-    @Override
-    protected void initNewItem(SalesTerritory item) {
-        initDrawingMode();
-        super.initNewItem(item);
-    }
-
     private void initDrawingMode() {
         DrawingOptions drawingOptions = new DrawingOptions();
         PolygonOptions polygonOptions = new PolygonOptions(false, true, POLYGON_COLOR,
@@ -68,7 +68,6 @@ public class SalesTerritoryEdit extends AbstractEditor<SalesTerritory> {
                 getItem().setPolygonGeometry(MapViewerHelper.mapPolygonToWKTPolygon(event.getPolygon())));
         addPolygonEditListener();
     }
-
 
     private void addPolygonEditListener() {
         map.addPolygonEditListener(polygonEditEvent -> getItem().

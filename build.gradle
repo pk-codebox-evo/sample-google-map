@@ -61,9 +61,6 @@ configure([globalModule, coreModule, guiModule, webModule]) {
 
     dependencies {
         testCompile('junit:junit:4.12')
-        compile("com.vividsolutions:jts-core:1.14.0")
-        compile("com.vividsolutions:jts-example:1.14.0")
-        compile("com.vividsolutions:jts-app:1.14.0")
     }
 
     task sourceJar(type: Jar) {
