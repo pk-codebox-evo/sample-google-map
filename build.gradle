@@ -3,7 +3,7 @@ buildscript {
     ext.cubaVersion = '6.3.3'
     repositories {
         maven {
-            url 'http://repository.haulmont.com:8587/nexus/content/groups/work'
+            url 'https://repo.cuba-platform.com/content/groups/work'
             credentials {
                 username(rootProject.hasProperty('repoUser') ? rootProject['repoUser'] : 'developer')
                 password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'Haul2010')
@@ -42,7 +42,7 @@ apply(plugin: 'cuba')
 
 cuba {
     artifact {
-        group = 'com.company.cubamapexample'
+        group = 'com.company.sample'
         version = '0.1'
         isSnapshot = true
     }
@@ -132,7 +132,7 @@ configure(coreModule) {
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
         dbms = 'hsql'
         host = 'localhost'
-        dbName = 'cubamapexample'
+        dbName = 'sample'
         dbUser = 'sa'
         dbPassword = ''
     }
@@ -140,7 +140,7 @@ configure(coreModule) {
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
         dbms = 'hsql'
         host = 'localhost'
-        dbName = 'cubamapexample'
+        dbName = 'sample'
         dbUser = 'sa'
         dbPassword = ''
     }
@@ -154,7 +154,7 @@ configure(guiModule) {
 
     task deployConf(type: Copy) {
         from file('src')
-        include "com/company/cubamapexample/**"
+        include "com/company/sample/**"
         into "$cuba.tomcat.dir/conf/app"
     }
 }
@@ -182,7 +182,7 @@ configure(webModule) {
 
     task deployConf(type: Copy) {
         from file('src')
-        include "com/company/cubamapexample/**"
+        include "com/company/sample/**"
         into "$cuba.tomcat.dir/conf/app"
     }
 

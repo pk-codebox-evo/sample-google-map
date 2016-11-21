@@ -1,5 +1,5 @@
--- begin CUBAMAPEXAMPLE_SALES_PERSON
-create table CUBAMAPEXAMPLE_SALES_PERSON (
+-- begin SAMPLE_SALESPERSON
+create table SAMPLE_SALESPERSON (
     ID varchar(36) not null,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -19,9 +19,9 @@ create table CUBAMAPEXAMPLE_SALES_PERSON (
     --
     primary key (ID)
 )^
--- end CUBAMAPEXAMPLE_SALES_PERSON
--- begin CUBAMAPEXAMPLE_SALES_TERRITORY
-create table CUBAMAPEXAMPLE_SALES_TERRITORY (
+-- end SAMPLE_SALESPERSON
+-- begin SAMPLE_TERRITORY
+create table SAMPLE_TERRITORY (
     ID varchar(36) not null,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -36,9 +36,9 @@ create table CUBAMAPEXAMPLE_SALES_TERRITORY (
     --
     primary key (ID)
 )^
--- end CUBAMAPEXAMPLE_SALES_TERRITORY
--- begin CUBAMAPEXAMPLE_SALES_ORDER
-create table CUBAMAPEXAMPLE_SALES_ORDER (
+-- end SAMPLE_TERRITORY
+-- begin SAMPLE_ORDER
+create table SAMPLE_ORDER (
     ID varchar(36) not null,
     VERSION integer not null,
     CREATE_TS timestamp,
@@ -50,8 +50,8 @@ create table CUBAMAPEXAMPLE_SALES_ORDER (
     --
     AMOUNT double precision,
     DATE_ date,
-    SALES_PERSON_ID varchar(36),
+    SALESPERSON_ID varchar(36),
     --
     primary key (ID)
 )^
--- end CUBAMAPEXAMPLE_SALES_ORDER
+-- end SAMPLE_ORDER

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd" xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
+        caption="msg://caption"
+        class="com.company.sample.web.screens.chart.ChartScreen"
+        messagesPack="com.company.sample.web.screens.chart">
+    <dsContext>
+        <collectionDatasource id="dateValueDs"
+                              class="com.company.sample.entity.Order"
+                              view="_local">
+            <query>
+                <![CDATA[select e from sample$Order e where e.salesperson.id = :param$salesperson.id order by e.date ]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout>
+        <vbox spacing="true">
+            <hbox spacing="true">
+                <embedded id="personPhoto" width="115px" height="115px" type="IMAGE"/>
+                <grid spacing="true">
+                    <columns count="2"/>
+                    <rows>
+                        <row>
+                            <label value="msg://name"/>
+                            <label id="nameValue"/>
+                        </row>
+                        <row>
+                            <label value="msg://phone"/>
+                            <label id="phoneValue"/>
+                        </row>
+                    </rows>
+                </grid>
+            </hbox>
+            <chart:serialChart id="lineChart"
+                               autoMarginOffset="20"
+                               categoryField="date"
+                               datasource="dateValueDs"
+                               height="400px"
+                               width="100%"
+                               marginLeft="40"
+                               marginRight="40"
+                               mouseWheelZoomEnabled="true"
+                               theme="LIGHT">
+                <chart:valueAxes>
+                    <chart:axis id="v1"
+                                axisAlpha="0"
+                                ignoreAxisWidth="true"
+                                position="LEFT"/>
+                </chart:valueAxes>
+                <chart:balloon borderThickness="1"
+                               shadowAlpha="0"/>
+                <chart:graphs>
+                    <chart:graph id="g1"
+                                 balloonText="&lt;span style=&apos;font-size:18px;&apos;&gt;[[value]]&lt;/span&gt;"
+                                 bullet="ROUND"
+                                 bulletBorderAlpha="1"
+                                 bulletColor="WHITE"
+                                 bulletSize="5"
+                                 hideBulletsCount="50"
+                                 lineThickness="2"
+                                 title="Red line"
+                                 useLineColorForBulletBorder="true"
+                                 valueField="amount">
+                        <chart:balloon adjustBorderColor="false"
+                                       color="WHITE"
+                                       drop="true"/>
+                    </chart:graph>
+                </chart:graphs>
+            </chart:serialChart>
+        </vbox>
+    </layout>
+</window>

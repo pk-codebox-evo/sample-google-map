@@ -1,11 +1,11 @@
 @import "halo-defaults";
-@import "com.company.cubamapexample/halo-ext-defaults";
+@import "com.company.sample/halo-ext-defaults";
 @import "app-components";
-@import "com.company.cubamapexample/halo-ext";
+@import "com.company.sample/halo-ext";
 
 .halo {
   // include auto-generated app components SCSS
   @include app_components;
   
-  @include com_company_cubamapexample-halo-ext;
+  @include com_company_sample-halo-ext;
 }
