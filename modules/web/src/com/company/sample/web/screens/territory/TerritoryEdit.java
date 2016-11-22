@@ -7,6 +7,7 @@ import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Polygon;
 import com.haulmont.charts.gui.map.model.drawing.*;
 import com.haulmont.cuba.gui.components.AbstractEditor;
+import com.haulmont.cuba.gui.components.Button;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -18,28 +19,54 @@ public class TerritoryEdit extends AbstractEditor<Territory> {
 
     @Inject
     private MapViewer map;
+    @Inject
+    private Button removePolygonButton;
 
-    @Override
-    protected void initNewItem(Territory item) {
-        initDrawingMode();
-        super.initNewItem(item);
-    }
+    protected Polygon existingPolygon;
 
     @Override
     public void ready() {
+        initTerritoryChangeListener();
         addExistingPolygonOverlay();
+        addDrawingMode();
         setMapCenter();
         super.ready();
     }
 
+    private void addDrawingMode() {
+        if (existingPolygon == null) {
+            initDrawingMode();
+        }
+    }
+
+    private void initTerritoryChangeListener() {
+        getItem().addListener((item, property, prevValue, value) -> {
+            if ("polygonGeometry".equals(property)) {
+                if (value == null) {
+                    removePolygonButton.setEnabled(false);
+                } else {
+                    removePolygonButton.setEnabled(true);
+                }
+            }
+        });
+    }
+
+    public void removePolygon() {
+        getItem().setPolygonGeometry(null);
+        map.removePolygonOverlay(existingPolygon);
+        existingPolygon = null;
+        initDrawingMode();
+    }
+
     private void addExistingPolygonOverlay() {
-        Polygon polygon = MapViewerHelper.WKTPolygonToMapPolygon(map, getItem().getPolygonGeometry());
-        if (polygon != null) {
-            polygon.setFillColor(POLYGON_COLOR);
-            polygon.setFillOpacity(POLYGON_OPACITY);
-            polygon.setEditable(true);
-            map.addPolygonOverlay(polygon);
+        existingPolygon = MapViewerHelper.WKTPolygonToMapPolygon(map, getItem().getPolygonGeometry());
+        if (existingPolygon != null) {
+            existingPolygon.setFillColor(POLYGON_COLOR);
+            existingPolygon.setFillOpacity(POLYGON_OPACITY);
+            existingPolygon.setEditable(true);
+            map.addPolygonOverlay(existingPolygon);
             addPolygonEditListener();
+            removePolygonButton.setEnabled(true);
         }
     }
 
@@ -63,13 +90,18 @@ public class TerritoryEdit extends AbstractEditor<Territory> {
         drawingOptions.setEnableDrawingControl(true);
         drawingOptions.setDrawingControlOptions(controlOptions);
         map.setDrawingOptions(drawingOptions);
-        map.addPolygonCompleteListener(event ->
-                getItem().setPolygonGeometry(MapViewerHelper.mapPolygonToWKTPolygon(event.getPolygon())));
+        map.addPolygonCompleteListener(event -> {
+            getItem().setPolygonGeometry(MapViewerHelper.mapPolygonToWKTPolygon(event.getPolygon()));
+            existingPolygon = event.getPolygon();
+            map.setDrawingOptions(null);
+        });
         addPolygonEditListener();
     }
 
     private void addPolygonEditListener() {
-        map.addPolygonEditListener(polygonEditEvent -> getItem().
-                setPolygonGeometry(MapViewerHelper.mapPolygonToWKTPolygon(polygonEditEvent.getPolygon())));
+        map.addPolygonEditListener(polygonEditEvent -> {
+            getItem().setPolygonGeometry(MapViewerHelper.mapPolygonToWKTPolygon(polygonEditEvent.getPolygon()));
+            existingPolygon = polygonEditEvent.getPolygon();
+        });
     }
 }

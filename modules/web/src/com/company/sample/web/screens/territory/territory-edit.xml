@@ -15,12 +15,16 @@
     <layout expand="windowActions"
             spacing="true">
         <hbox spacing="true">
-            <fieldGroup id="fieldGroup"
-                        datasource="territoryDs">
-                <column width="250px">
-                    <field id="name"/>
-                </column>
-            </fieldGroup>
+            <vbox spacing="true">
+                <fieldGroup id="fieldGroup"
+                            datasource="territoryDs">
+                    <column width="250px">
+                        <field id="name"/>
+                    </column>
+                </fieldGroup>
+                <button id="removePolygonButton" align="MIDDLE_RIGHT"
+                        enable="false" invoke="removePolygon" caption="msg://removePolygon"/>
+            </vbox>
             <chart:mapViewer id="map" width="500px" height="500px"/>
         </hbox>
         <frame id="windowActions"
