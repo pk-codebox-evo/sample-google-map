@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         caption="msg://browseCaption"
-        class="com.company.sample.web.salesperson.SalespersonBrowse"
-        focusComponent="salespersonsTable"
-        lookupComponent="salespersonsTable"
-        messagesPack="com.company.sample.web.salesperson">
+        class="com.company.sample.web.screens.territory.TerritoryBrowse"
+        focusComponent="territoriesTable"
+        lookupComponent="territoriesTable"
+        messagesPack="com.company.sample.web.screens.territory">
     <dsContext>
-        <collectionDatasource id="salespersonsDs"
-                              class="com.company.sample.entity.Salesperson"
-                              view="salesperson-browser-view">
+        <collectionDatasource id="territoriesDs"
+                              class="com.company.sample.entity.Territory"
+                              view="territory-view">
             <query>
-                <![CDATA[select e from sample$Salesperson e]]>
+                <![CDATA[select e from sample$Territory e]]>
             </query>
         </collectionDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
-    <layout expand="salespersonsTable"
+    <layout expand="territoriesTable"
             spacing="true">
         <filter id="filter"
-                applyTo="salespersonsTable"
-                datasource="salespersonsDs">
+                applyTo="territoriesTable"
+                datasource="territoriesDs">
             <properties include=".*"/>
         </filter>
-        <table id="salespersonsTable"
+        <table id="territoriesTable"
                width="100%">
             <actions>
                 <action id="create"/>
@@ -32,19 +32,17 @@
             </actions>
             <columns>
                 <column id="name"/>
-                <column id="phone"/>
-                <column id="territory"/>
             </columns>
-            <rows datasource="salespersonsDs"/>
+            <rows datasource="territoriesDs"/>
             <rowsCount/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
                 <button id="createBtn"
-                        action="salespersonsTable.create"/>
+                        action="territoriesTable.create"/>
                 <button id="editBtn"
-                        action="salespersonsTable.edit"/>
+                        action="territoriesTable.edit"/>
                 <button id="removeBtn"
-                        action="salespersonsTable.remove"/>
+                        action="territoriesTable.remove"/>
             </buttonsPanel>
         </table>
     </layout>

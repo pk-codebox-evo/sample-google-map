@@ -1,4 +1,8 @@
-package com.company.sample.geometryutils;
+/*
+ * TODO Copyright
+ */
+
+package com.company.sample.entity;
 
 public interface HasCoordinates {
     Double getLatitude();

@@ -34,4 +34,9 @@
         <property name="salesperson"
                   view="_minimal"/>
     </view>
+    <view class="com.company.sample.entity.Salesperson"
+          name="salesperson-photo">
+        <property name="photo"
+                  view="_minimal"/>
+    </view>
 </views>

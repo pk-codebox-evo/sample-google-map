@@ -1,7 +1,5 @@
 package com.company.sample.entity;
 
-import com.company.sample.geometryutils.HasCoordinates;
-import com.company.sample.geometryutils.datatypes.GeoCoordinateDatatype;
 import com.haulmont.chile.core.annotations.MetaProperty;
 import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.cuba.core.entity.FileDescriptor;

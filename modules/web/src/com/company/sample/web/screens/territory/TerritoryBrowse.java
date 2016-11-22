@@ -1,4 +1,4 @@
-package com.company.sample.web.territory;
+package com.company.sample.web.screens.territory;
 
 import com.haulmont.cuba.gui.components.AbstractLookup;
 

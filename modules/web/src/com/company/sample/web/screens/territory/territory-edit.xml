@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd" xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd"
         caption="msg://editCaption"
-        class="com.company.sample.web.territory.TerritoryEdit"
+        class="com.company.sample.web.screens.territory.TerritoryEdit"
         datasource="territoryDs"
         focusComponent="fieldGroup"
-        messagesPack="com.company.sample.web.territory">
+        messagesPack="com.company.sample.web.screens.territory">
     <dsContext>
         <datasource id="territoryDs"
                     class="com.company.sample.entity.Territory"

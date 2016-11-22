@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         caption="msg://editCaption"
-        class="com.company.sample.web.salesperson.SalespersonEdit"
+        class="com.company.sample.web.screens.salesperson.SalespersonEdit"
         datasource="salespersonDs"
         focusComponent="fieldGroup"
-        messagesPack="com.company.sample.web.salesperson"
+        messagesPack="com.company.sample.web.screens.salesperson"
         xmlns:chart="http://schemas.haulmont.com/charts/charts.xsd">
     <dsContext>
         <datasource id="salespersonDs"

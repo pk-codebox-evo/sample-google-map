@@ -1,8 +1,8 @@
-package com.company.sample.web.salesperson;
+package com.company.sample.web.screens.salesperson;
 
 import com.company.sample.entity.Salesperson;
 import com.company.sample.entity.Territory;
-import com.company.sample.web.style.MapViewerHelper;
+import com.company.sample.web.MapViewerHelper;
 import com.haulmont.charts.gui.components.map.MapViewer;
 import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Marker;

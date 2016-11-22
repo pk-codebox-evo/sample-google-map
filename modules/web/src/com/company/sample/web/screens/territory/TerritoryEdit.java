@@ -1,7 +1,7 @@
-package com.company.sample.web.territory;
+package com.company.sample.web.screens.territory;
 
 import com.company.sample.entity.Territory;
-import com.company.sample.web.style.MapViewerHelper;
+import com.company.sample.web.MapViewerHelper;
 import com.haulmont.charts.gui.components.map.MapViewer;
 import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Polygon;
@@ -33,7 +33,7 @@ public class TerritoryEdit extends AbstractEditor<Territory> {
     }
 
     private void addExistingPolygonOverlay() {
-        com.haulmont.charts.gui.map.model.Polygon polygon = MapViewerHelper.WKTPolygonToMapPolygon(map, getItem().getPolygonGeometry());
+        Polygon polygon = MapViewerHelper.WKTPolygonToMapPolygon(map, getItem().getPolygonGeometry());
         if (polygon != null) {
             polygon.setFillColor(POLYGON_COLOR);
             polygon.setFillOpacity(POLYGON_OPACITY);
@@ -54,8 +54,7 @@ public class TerritoryEdit extends AbstractEditor<Territory> {
 
     private void initDrawingMode() {
         DrawingOptions drawingOptions = new DrawingOptions();
-        PolygonOptions polygonOptions = new PolygonOptions(false, true, POLYGON_COLOR,
-                POLYGON_OPACITY);
+        PolygonOptions polygonOptions = new PolygonOptions(false, true, POLYGON_COLOR, POLYGON_OPACITY);
         polygonOptions.setStrokeWeight(1);
         CircleOptions circleOptions = new CircleOptions();
         ControlOptions controlOptions = new ControlOptions(Position.TOP_CENTER, Collections.singletonList(OverlayType.POLYGON));

@@ -1,4 +1,8 @@
-package com.company.sample.geometryutils.datatypes;
+/*
+ * TODO Copyright
+ */
+
+package com.company.sample.entity;
 
 import com.haulmont.chile.core.datatypes.Datatypes;
 import com.haulmont.chile.core.datatypes.FormatStrings;

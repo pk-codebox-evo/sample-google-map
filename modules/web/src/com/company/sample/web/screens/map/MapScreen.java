@@ -1,7 +1,7 @@
 package com.company.sample.web.screens.map;
 
 import com.company.sample.entity.Salesperson;
-import com.company.sample.web.style.MapViewerHelper;
+import com.company.sample.web.MapViewerHelper;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.haulmont.bali.util.ParamsMap;

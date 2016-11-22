@@ -10,8 +10,6 @@
                   ref="cuba_clusterInvocationSupport"/>
         <property name="remoteServices">
             <map>
-                <entry key="sample_PhotoLoaderService"
-                       value="com.company.sample.service.PhotoLoaderService"/>
             </map>
         </property>
     </bean>

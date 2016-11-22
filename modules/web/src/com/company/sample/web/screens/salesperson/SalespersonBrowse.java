@@ -1,4 +1,4 @@
-package com.company.sample.web.salesperson;
+package com.company.sample.web.screens.salesperson;
 
 import com.haulmont.cuba.gui.components.AbstractLookup;
 

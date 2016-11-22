@@ -1,13 +1,15 @@
-package com.company.sample.web.style;
+package com.company.sample.web;
 
 import com.haulmont.charts.gui.components.map.MapViewer;
 import com.haulmont.charts.gui.map.model.GeoPoint;
+import com.haulmont.charts.gui.map.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapViewerHelper {
-    public static String mapPolygonToWKTPolygon(com.haulmont.charts.gui.map.model.Polygon polygon) {
+
+    public static String mapPolygonToWKTPolygon(Polygon polygon) {
         String polygonString = "POLYGON ((";
         String firstVertex = "";
         List<GeoPoint> coordinates = polygon.getCoordinates();
@@ -27,7 +29,7 @@ public class MapViewerHelper {
         return polygonString;
     }
 
-    public static com.haulmont.charts.gui.map.model.Polygon WKTPolygonToMapPolygon(MapViewer map, String wktPolygon) {
+    public static Polygon WKTPolygonToMapPolygon(MapViewer map, String wktPolygon) {
         if (wktPolygon == null || map == null) {
             return null;
         }
@@ -41,10 +43,10 @@ public class MapViewerHelper {
         return map.createPolygon(geoPoints);
     }
 
-    public static double[] getCenter(com.haulmont.charts.gui.map.model.Polygon polygonGeometry) {
+    public static double[] getCenter(Polygon polygon) {
         double lat = 0;
         double lon = 0;
-        List<GeoPoint> geoPoints = polygonGeometry.getCoordinates();
+        List<GeoPoint> geoPoints = polygon.getCoordinates();
         for (GeoPoint geoPoint : geoPoints) {
             lat = lat + geoPoint.getLatitude();
             lon = lon + geoPoint.getLongitude();

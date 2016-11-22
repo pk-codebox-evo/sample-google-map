@@ -1,14 +1,15 @@
 package com.company.sample.web.controllers;
 
-import com.company.sample.service.PhotoLoaderService;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Configuration;
+import com.company.sample.entity.Salesperson;
+import com.haulmont.cuba.core.app.FileStorageService;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.FileStorageException;
 import com.haulmont.cuba.core.global.GlobalConfig;
+import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.sys.AppContext;
 import com.haulmont.cuba.core.sys.SecurityContext;
 import com.haulmont.cuba.security.app.LoginService;
 import com.haulmont.cuba.security.global.UserSession;
-import com.haulmont.cuba.web.auth.WebAuthConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -20,90 +21,83 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
 @Controller
 public class PhotoController {
 
-    private static Logger log = LoggerFactory.getLogger(PhotoController.class);
+    @Inject
+    private LoginService loginService;
+
+    @Inject
+    private GlobalConfig globalConfig;
+
+    @Inject
+    private DataManager dataManager;
+
+    @Inject
+    private FileStorageService fileStorageService;
+
+    private Logger log = LoggerFactory.getLogger(PhotoController.class);
 
     @RequestMapping(value = "/getPhoto/{id}-{version}.png")
-    public ResponseEntity getPhoto(@PathVariable String id, @PathVariable String version) {
-        final ResponseEntity[] imageInByte = new ResponseEntity[1];
-        doAsPrivilegedUser(() -> {
-            PhotoLoaderService photoLoaderService = AppBeans.get(PhotoLoaderService.NAME);
-            byte[] bytes = photoLoaderService.getPhotoByUserId(UUID.fromString(id));
-            final HttpHeaders headers = new HttpHeaders();
+    public ResponseEntity getPhoto(@PathVariable String id, @PathVariable String version, HttpServletResponse response)
+            throws IOException {
+
+        return authenticated(response, () -> {
+            byte[] bytes = null;
+
+            Salesperson salesperson = dataManager.load(
+                    LoadContext.create(Salesperson.class).setId(UUID.fromString(id)).setView("salesperson-photo"));
+            if (salesperson == null) {
+                log.error("Salesperson {} not found", id);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
+            if (salesperson.getPhoto() != null) {
+                try {
+                    bytes = fileStorageService.loadFile(salesperson.getPhoto());
+                } catch (FileStorageException e) {
+                    log.error("Error loading file", e);
+                }
+            }
+            HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_PNG);
             if (bytes == null) {
-                bytes = getIncognitoImage();
+                URL url = new URL(globalConfig.getDispatcherBaseUrl() + "/static/noIcon.png");
+                BufferedImage defaultImage = ImageIO.read(url);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(defaultImage, "png", baos);
+                baos.flush();
+                bytes = baos.toByteArray();
+                baos.close();
             }
-            imageInByte[0] = new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(bytes, headers, HttpStatus.CREATED);
         });
-        return imageInByte[0];
     }
 
-    private byte[] getIncognitoImage() {
-        Configuration configuration = AppBeans.get(Configuration.NAME);
-        GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-        BufferedImage incognitoImage;
-        try {
-            URL url = new URL(config.getDispatcherBaseUrl() + "/static/noIcon.png");
-            incognitoImage = ImageIO.read(url);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(incognitoImage, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            return imageInByte;
-        } catch (IOException e) {
-            log.warn("Can not load incognito image", e);
-        }
-        return new byte[0];
-    }
-
-    public static void doAsPrivilegedUser(Runnable runnable) {
-        getAsPrivilegedUser(() -> {
-            runnable.run();
+    public <T> T authenticated(HttpServletResponse response, Callable<T> callable) throws IOException {
+        UserSession anonymousUserSession = loginService.getSession(globalConfig.getAnonymousSessionId());
+        if (anonymousUserSession == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
-        });
-    }
-
-    public static <T> T getAsPrivilegedUser(Callable<T> callable) {
-        SecurityContext sc = AppContext.getSecurityContext();
-        T result;
-        try {
-            LoginService loginService = AppBeans.get(LoginService.NAME);
-            Configuration configuration = AppBeans.get(Configuration.NAME);
-            WebAuthConfig webConfig = configuration.getConfig(WebAuthConfig.class);
-            String trustedPassword = webConfig.getTrustedClientPassword();
-            GlobalConfig globalConfig = configuration.getConfig(GlobalConfig.class);
-            Locale systemLocale = globalConfig.getAvailableLocales().values().iterator().next();
-
-            UserSession session = loginService.loginTrusted("anonymous", trustedPassword, systemLocale);
-            AppContext.setSecurityContext(new SecurityContext(session));
-
-            try {
-                result = callable.call();
-            } finally {
-                loginService.logout();
-            }
-        } catch (Exception e) {
-            log.debug("Unable to execute privileged action", e);
-
-            throw new PrivilegedActionException(e);
-        } finally {
-            AppContext.setSecurityContext(sc);
         }
-        return result;
+        AppContext.setSecurityContext(new SecurityContext(anonymousUserSession));
+        try {
+            return callable.call();
+        } catch (Exception e) {
+            log.error("Error executing request", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return null;
+        } finally {
+            AppContext.setSecurityContext(null);
+        }
     }
-
 }
-
-

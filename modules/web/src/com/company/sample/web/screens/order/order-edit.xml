@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         caption="msg://editCaption"
-        class="com.company.sample.web.order.OrderEdit"
+        class="com.company.sample.web.screens.order.OrderEdit"
         datasource="orderDs"
         focusComponent="fieldGroup"
-        messagesPack="com.company.sample.web.order">
+        messagesPack="com.company.sample.web.screens.order">
     <dsContext>
         <datasource id="orderDs"
                     class="com.company.sample.entity.Order"

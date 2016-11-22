@@ -1,6 +1,6 @@
 <datatypes>
 
-    <datatype class="com.company.sample.geometryutils.datatypes.GeoCoordinateDatatype"
+    <datatype class="com.company.sample.entity.GeoCoordinateDatatype"
               format="#0.000000" decimalSeparator="." groupingSeparator=""
               javaType="java.lang.Double"/>
 
