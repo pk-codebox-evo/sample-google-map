@@ -9,6 +9,12 @@ import java.util.List;
 
 public class MapViewerHelper {
 
+    /**
+     * Converts {@link Polygon} object to its <a href="https://en.wikipedia.org/wiki/Well-known_text">WKT</a> representation.
+     *
+     * @param polygon polygon object
+     * @return WKT string
+     */
     public static String mapPolygonToWKTPolygon(Polygon polygon) {
         String polygonString = "POLYGON ((";
         String firstVertex = "";
@@ -29,6 +35,13 @@ public class MapViewerHelper {
         return polygonString;
     }
 
+    /**
+     * Converts <a href="https://en.wikipedia.org/wiki/Well-known_text">WKT</a> polygon representation to a {@link Polygon} object.
+     *
+     * @param map           map component
+     * @param wktPolygon    WKT string
+     * @return  polygon object
+     */
     public static Polygon WKTPolygonToMapPolygon(MapViewer map, String wktPolygon) {
         if (wktPolygon == null || map == null) {
             return null;
@@ -43,6 +56,12 @@ public class MapViewerHelper {
         return map.createPolygon(geoPoints);
     }
 
+    /**
+     * Get center of a polygon.
+     *
+     * @param polygon   polygon object
+     * @return  double[2] containing center coordinates
+     */
     public static double[] getCenter(Polygon polygon) {
         double lat = 0;
         double lon = 0;

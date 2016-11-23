@@ -14,15 +14,15 @@ import java.util.Collections;
 
 public class TerritoryEdit extends AbstractEditor<Territory> {
 
-    protected final static String POLYGON_COLOR = "#ffe133";
-    protected final static Double POLYGON_OPACITY = 0.5;
+    private final static String POLYGON_COLOR = "#ffe133";
+    private final static Double POLYGON_OPACITY = 0.5;
 
     @Inject
     private MapViewer map;
     @Inject
     private Button removePolygonButton;
 
-    protected Polygon existingPolygon;
+    private Polygon existingPolygon;
 
     @Override
     public void ready() {

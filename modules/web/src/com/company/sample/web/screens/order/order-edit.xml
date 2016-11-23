@@ -9,6 +9,13 @@
         <datasource id="orderDs"
                     class="com.company.sample.entity.Order"
                     view="order-browser-view"/>
+        <collectionDatasource id="salespersonsDs"
+                              class="com.company.sample.entity.Salesperson"
+                              view="_minimal">
+            <query>
+                <![CDATA[select e from sample$Salesperson e order by e.name]]>
+            </query>
+        </collectionDatasource>
     </dsContext>
     <dialogMode height="600"
                 width="800"/>
@@ -19,7 +26,8 @@
             <column width="250px">
                 <field id="amount"/>
                 <field id="date"/>
-                <field id="salesperson"/>
+                <field id="salesperson"
+                       optionsDatasource="salespersonsDs"/>
             </column>
         </fieldGroup>
         <frame id="windowActions"

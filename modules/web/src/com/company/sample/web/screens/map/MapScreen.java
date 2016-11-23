@@ -10,7 +10,6 @@ import com.haulmont.charts.gui.map.model.GeoPoint;
 import com.haulmont.charts.gui.map.model.Marker;
 import com.haulmont.charts.gui.map.model.Polygon;
 import com.haulmont.charts.gui.map.model.base.MarkerImage;
-import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.core.global.GlobalConfig;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.AbstractWindow;
@@ -25,17 +24,17 @@ import java.util.UUID;
 public class MapScreen extends AbstractWindow {
 
     @Inject
-    private Configuration configuration;
+    private GlobalConfig config;
 
     @Inject
-    protected CollectionDatasource<Salesperson, UUID> salespersonsDs;
+    private CollectionDatasource<Salesperson, UUID> salespersonsDs;
 
     @Inject
-    protected MapViewer map;
+    private MapViewer map;
 
-    protected Map<Polygon, Salesperson> polygonSalespersonMap = new HashMap<>();
+    private Map<Polygon, Salesperson> polygonSalespersonMap = new HashMap<>();
 
-    protected BiMap<Marker, Salesperson> salespersonMarkers = HashBiMap.create();
+    private BiMap<Marker, Salesperson> salespersonMarkers = HashBiMap.create();
 
     @Override
     public void ready() {
@@ -93,9 +92,8 @@ public class MapScreen extends AbstractWindow {
     }
 
     private MarkerImage getMarkerImageForPerson(Salesperson salesperson) {
-        GlobalConfig config = configuration.getConfig(GlobalConfig.class);
         MarkerImage markerImage = map.createMarkerImage();
-        markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + '-' + salesperson.getVersion() + ".png");
+        markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + ".png");
         markerImage.setScaledSize(map.createSize(48, 48));
         return markerImage;
     }

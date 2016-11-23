@@ -30,6 +30,9 @@ import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+/**
+ * Spring MVC controller for loading images to display on map.
+ */
 @Controller
 public class PhotoController {
 
@@ -47,13 +50,14 @@ public class PhotoController {
 
     private Logger log = LoggerFactory.getLogger(PhotoController.class);
 
-    @RequestMapping(value = "/getPhoto/{id}-{version}.png")
-    public ResponseEntity getPhoto(@PathVariable String id, @PathVariable String version, HttpServletResponse response)
+    @RequestMapping(value = "/getPhoto/{id}.png")
+    public ResponseEntity getPhoto(@PathVariable String id, HttpServletResponse response)
             throws IOException {
 
         return authenticated(response, () -> {
             byte[] bytes = null;
 
+            // Load a salesperson photo from File Storage
             Salesperson salesperson = dataManager.load(
                     LoadContext.create(Salesperson.class).setId(UUID.fromString(id)).setView("salesperson-photo"));
             if (salesperson == null) {
@@ -71,6 +75,7 @@ public class PhotoController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_PNG);
             if (bytes == null) {
+                // If photo is not set, use a default image
                 URL url = new URL(globalConfig.getDispatcherBaseUrl() + "/static/noIcon.png");
                 BufferedImage defaultImage = ImageIO.read(url);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -83,7 +88,16 @@ public class PhotoController {
         });
     }
 
-    public <T> T authenticated(HttpServletResponse response, Callable<T> callable) throws IOException {
+    /**
+     * Execute code on behalf of anonymous user.
+     *
+     * @param response  response object
+     * @param callable  code to execute
+     * @param <T>       type of return value
+     * @return          result
+     * @throws IOException  propagated from HttpServletResponse methods
+     */
+    private <T> T authenticated(HttpServletResponse response, Callable<T> callable) throws IOException {
         UserSession anonymousUserSession = loginService.getSession(globalConfig.getAnonymousSessionId());
         if (anonymousUserSession == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);

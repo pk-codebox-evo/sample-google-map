@@ -176,7 +176,7 @@ public class SalespersonEdit extends AbstractEditor<Salesperson> {
         Salesperson salesperson = getItem();
         if (salesperson.getPhoto() != null) {
             GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            personPhoto.setSource(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + '-' + salesperson.getVersion() + ".png");
+            personPhoto.setSource(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + ".png");
             personPhoto.setType(Embedded.Type.IMAGE);
         } else {
             personPhoto.setVisible(false);

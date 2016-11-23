@@ -11,7 +11,7 @@ import java.util.Set;
 @NamePattern("%s|name")
 @Table(name = "SAMPLE_SALESPERSON")
 @Entity(name = "sample$Salesperson")
-public class Salesperson extends StandardEntity implements HasCoordinates {
+public class Salesperson extends StandardEntity {
     private static final long serialVersionUID = 7616264237995894675L;
 
     @Column(name = "NAME")
@@ -98,7 +98,6 @@ public class Salesperson extends StandardEntity implements HasCoordinates {
         return phone;
     }
 
-    @Override
     public Double getLatitude() {
         return latitude;
     }
@@ -107,7 +106,6 @@ public class Salesperson extends StandardEntity implements HasCoordinates {
         this.latitude = latitude;
     }
 
-    @Override
     public Double getLongitude() {
         return longitude;
     }
