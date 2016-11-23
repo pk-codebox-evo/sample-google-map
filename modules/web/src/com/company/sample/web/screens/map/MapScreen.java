@@ -93,7 +93,7 @@ public class MapScreen extends AbstractWindow {
 
     private MarkerImage getMarkerImageForPerson(Salesperson salesperson) {
         MarkerImage markerImage = map.createMarkerImage();
-        markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + ".png");
+        markerImage.setUrl(config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + '-' + salesperson.getVersion() + ".png");
         markerImage.setScaledSize(map.createSize(48, 48));
         return markerImage;
     }

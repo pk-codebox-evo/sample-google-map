@@ -50,10 +50,18 @@ public class PhotoController {
 
     private Logger log = LoggerFactory.getLogger(PhotoController.class);
 
-    @RequestMapping(value = "/getPhoto/{id}.png")
-    public ResponseEntity getPhoto(@PathVariable String id, HttpServletResponse response)
-            throws IOException {
-
+    /**
+     * HTTP endpoint for loading salesperson pictures.
+     *
+     * @param id        salesperson ID
+     * @param version   salesperson version. It is not used in code but required for changing URL to always display
+     *                  a new picture if it was changed.
+     * @param response  response
+     */
+    @RequestMapping(value = "/getPhoto/{id}-{version}.png")
+    public ResponseEntity getPhoto(@PathVariable String id,
+                                   @SuppressWarnings("UnusedParameters") @PathVariable String version,
+                                   HttpServletResponse response) throws IOException {
         return authenticated(response, () -> {
             byte[] bytes = null;
 

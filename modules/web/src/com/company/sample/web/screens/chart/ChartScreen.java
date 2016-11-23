@@ -45,7 +45,7 @@ public class ChartScreen extends AbstractWindow {
     private void initPhoto() {
         if (salesperson != null) {
             GlobalConfig config = configuration.getConfig(GlobalConfig.class);
-            String photoURL = config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + ".png";
+            String photoURL = config.getDispatcherBaseUrl() + "/getPhoto/" + salesperson.getId() + '-' + salesperson.getVersion() + ".png";
             personPhoto.setSource(photoURL);
             personPhoto.setType(Embedded.Type.IMAGE);
         }
